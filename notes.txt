@@ -1,0 +1,35 @@
+========
+Summary
+========
+
+* algorithms closely follow the Chord paper
+
+* zerorpc is used to manage synchronous communication between the
+  Chord nodes.
+
+  def _remote_call(self, method, args):
+        client = zerorpc.Client()
+        client.connect('tcp://%s' % self.node_address)
+        res = client(method, *args)
+        client.close()
+        return res
+
+  def run(self):
+        rpc = zerorpc.Server(self)
+        rpc.bind('tcp://%s' % self.address)
+        rpc.run()
+
+* hash address using hashlib.sha1
+
+  def hash_node(self, address):
+        return int(sha1(address).hexdigest(), 16)
+
+========
+Next
+========
+
+* Understand zerorpc layers
+  1. Wire (transport): ZeroMQ and msgpack
+  2. Event (message):
+       gevent: http://sdiehl.github.io/gevent-tutorial/
+  3. RPC (request and response)
